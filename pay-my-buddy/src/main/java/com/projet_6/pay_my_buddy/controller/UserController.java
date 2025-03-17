@@ -3,13 +3,11 @@ package com.projet_6.pay_my_buddy.controller;
 
 import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.service.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @Controller
@@ -22,16 +20,32 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User createdUser = userService.registerUser(user);
+        return ResponseEntity.ok(createdUser);
     }
 
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        userService.registerUser(user);
-        return "redirect:/login";
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable int id) {
+        Optional<User> user = userService.getUserById(id);
+        return user.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/update-balance/{id}")
+    public ResponseEntity<User> updateBalance(@PathVariable int id, @RequestParam Double amount) {
+        User updatedUser = userService.updateBalance(id, amount);
+        return ResponseEntity.ok(updatedUser);
     }
 }
 

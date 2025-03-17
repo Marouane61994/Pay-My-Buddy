@@ -5,30 +5,36 @@ import com.projet_6.pay_my_buddy.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-
-    public User findUser() {
-        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(userMail);
+    public User registerUser(User user) {
+        user.setBalance(0.0);
+        return userRepository.save(user);
     }
-    public void registerUser(User user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public Optional<User> getUserById(int id) {
+        return userRepository.findById(id);
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User updateBalance(int userId, Double amount) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setBalance(user.getBalance() + amount);
+        return userRepository.save(user);
+    }
+
 }
 

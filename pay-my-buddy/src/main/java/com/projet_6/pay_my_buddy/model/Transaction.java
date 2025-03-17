@@ -3,15 +3,16 @@ package com.projet_6.pay_my_buddy.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 
 
 @Entity
-//@Table(name = "transactions")
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
@@ -28,11 +29,11 @@ public class Transaction {
     private String description;
 
 
+    private LocalDateTime timestamp;
+    private Double commission;
+
+
     public Transaction() {
-    }
-
-
-    public Transaction(User sender, User receiver, double amount, String description) {
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
@@ -40,11 +41,13 @@ public class Transaction {
     }
 
 
-    public Long getId() {
+
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -64,12 +67,28 @@ public class Transaction {
         this.receiver = receiver;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
     }
 
     public String getDescription() {
