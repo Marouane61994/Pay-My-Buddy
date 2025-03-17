@@ -11,11 +11,11 @@ public class UserConnection {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "friend_id")
+    @JoinColumn(name = "connection_id")
     private User friend;
 
 
