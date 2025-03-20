@@ -11,17 +11,28 @@ import java.util.List;
 @Service
 public class UserConnectionService {
 
+
     @Autowired
     private UserConnectionRepository userConnectionRepository;
 
-    public UserConnection addConnection(User user, User friend) {
+    public void addConnection(User user, User friend) {
+        // Vérifier si la relation existe déjà pour éviter les doublons
+        boolean alreadyConnected = userConnectionRepository.findByUserId(user.getId())
+                .stream()
+                .anyMatch(conn -> conn.getFriend().getId()==friend.getId());
+
+        if (alreadyConnected) {
+            throw new IllegalStateException("Cet utilisateur est déjà votre ami.");
+        }
+
         UserConnection connection = new UserConnection();
         connection.setUser(user);
         connection.setFriend(friend);
-        return userConnectionRepository.save(connection);
+        userConnectionRepository.save(connection);
     }
 
-    public List<UserConnection> getConnections(int userId) {
-        return userConnectionRepository.findByUserId(userId);
+    public List<UserConnection> getConnections(User user) {
+        return userConnectionRepository.findByUserId(user.getId());
     }
 }
+

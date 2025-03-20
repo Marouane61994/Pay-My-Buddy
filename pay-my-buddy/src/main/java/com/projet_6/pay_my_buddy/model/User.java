@@ -48,7 +48,7 @@ public class User {
         this.balance = balance;
     }
 
-    public String getUsername() {
+    public  String getUsername() {
         return username;
     }
 

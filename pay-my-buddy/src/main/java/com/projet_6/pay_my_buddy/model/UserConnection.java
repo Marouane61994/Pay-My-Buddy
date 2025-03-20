@@ -35,7 +35,7 @@ public class UserConnection {
         this.user = user;
     }
 
-    public User getFriend() {
+    public  User getFriend() {
         return friend;
     }
 
