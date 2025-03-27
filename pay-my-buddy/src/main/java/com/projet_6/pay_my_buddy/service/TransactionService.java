@@ -41,10 +41,9 @@ public class TransactionService {
         if (!isFriend) return "Le destinataire n'est pas un ami de l'expéditeur.";
         if (sender.getBalance() < amount) return "Solde insuffisant.";
 
-        double commission = amount * 0.005;
-        double totalAmount = amount + commission;
 
-        sender.setBalance(sender.getBalance() - totalAmount);
+
+        sender.setBalance(sender.getBalance() - amount);
         receiver.setBalance(receiver.getBalance() + amount);
 
         userRepository.save(sender);
@@ -54,7 +53,6 @@ public class TransactionService {
         tx.setSender(sender);
         tx.setReceiver(receiver);
         tx.setAmount(amount);
-        tx.setCommission(commission);
         tx.setTimestamp(LocalDateTime.now());
 
         transactionRepository.save(tx);
