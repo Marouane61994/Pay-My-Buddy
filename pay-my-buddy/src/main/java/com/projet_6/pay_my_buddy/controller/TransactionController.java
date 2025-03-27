@@ -1,6 +1,6 @@
 package com.projet_6.pay_my_buddy.controller;
 
-import com.projet_6.pay_my_buddy.model.Transaction;
+
 import com.projet_6.pay_my_buddy.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
-        Transaction savedTransaction = transactionService.createTransaction(transaction);
-        return ResponseEntity.ok(savedTransaction);
-    }
+
     @PostMapping("/send")
     public ResponseEntity<String> transferMoney(@RequestParam int senderId, @RequestParam int receiverId, @RequestParam Double amount) {
         String result = transactionService.sendMoney(senderId, receiverId, amount);

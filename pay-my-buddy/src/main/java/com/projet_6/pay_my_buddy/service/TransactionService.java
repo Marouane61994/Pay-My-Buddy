@@ -28,11 +28,7 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public Transaction createTransaction(Transaction transaction) {
-        transaction.setTimestamp(LocalDateTime.now());
-        transaction.setCommission(transaction.getAmount() * 0.005);
-        return transactionRepository.save(transaction);
-    }
+
 
     public String sendMoney(int senderId, int receiverId, Double amount) {
         User sender = userRepository.findById(senderId).orElseThrow();
