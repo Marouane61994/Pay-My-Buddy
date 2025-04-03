@@ -30,5 +30,5 @@ public class Transaction {
     private String description;
 
     private LocalDateTime timestamp;
-    private Double commission;
+
 }

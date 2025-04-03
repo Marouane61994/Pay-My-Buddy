@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de profil</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .nav-link {
+            font-weight: bold;
+            color: black;
+        }
+        .nav-link.active {
+            color: #007bff;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<nav class="navbar d-flex justify-content-between">
+    <span class="fw-bold">Pay My Buddy</span>
+    <div>
+        <a class="/transactions/send d-inline d-inline" href="#">Transférer</a>
+        <a class="/users/profile active" href="#">Profil</a>
+        <a class="nav-link d-inline" href="#">Ajouter relation</a>
+        <a class="/users/login d-inline text-danger" href="#">Se déconnecter</a>
+    </div>
+</nav>
+
+<form th:action="@{/transactions/send}" method="post">
+    <table>
+        <tr>
+            <td>Username</td>
+            <td th:text="${user.username}"></td>
+        </tr>
+        <tr>
+            <td>Mail</td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        <tr>
+            <td>Mot de passe</td>
+            <td>********</td>
+        </tr>
+    </table>
+
+    <a href="/profile/edit"><button>Modifier</button></a>
+
+</form>
+</html>

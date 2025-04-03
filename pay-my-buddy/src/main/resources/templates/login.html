@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Connexion</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+<div class="container">
+    <h2 class="title">Pay My Buddy</h2>
+
+
+<form th:action="@{/users/login}" method="post" th:object="${user}" class="form-box">
+
+    <label>
+        <input type="email" name="email"  placeholder="Mail" required>
+    </label>
+
+
+
+    <label>
+        <input type="password" name="password"  placeholder="Mot de passe" required>
+    </label>
+
+
+    <button type="submit" class="btn-register">Se connecter</button>
+
+</form>
+
+<p>Pas encore de compte ? <a th:href="@{/users/register}">S'inscrire</a></p>
+
+</div>
+
+</body>
+</html>
+
