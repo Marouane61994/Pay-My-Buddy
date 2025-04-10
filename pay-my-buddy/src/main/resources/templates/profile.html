@@ -46,23 +46,21 @@
 <nav class="navbar d-flex justify-content-between">
     <span class="fw-bold">Pay My Buddy</span>
     <div>
-        <a class="/transactions/send d-inline d-inline" href="#">Transférer</a>
-        <a class="/users/profile active" href="#">Profil</a>
-        <a class="nav-link d-inline" href="#">Ajouter relation</a>
-        <a class="/users/login d-inline text-danger" href="#">Se déconnecter</a>
+        <a class="d-inline " href="/transactions/send">Transférer</a>
+        <a class="d-inline active" href="/users/profile">Profil</a>
+        <a class="d-inline" href="/connections">Ajouter relation</a>
+        <a class="d-inline text-danger" href="/users/login">Se déconnecter</a>
     </div>
 </nav>
 
-<form th:action="@{/transactions/send}" method="post">
+<form th:action="@{/users/profile}" method="post">
     <table>
         <tr>
             <td>Username</td>
             <td th:text="${user.username}"></td>
         </tr>
-        <tr>
-            <td>Mail</td>
-            <td th:text="${user.email}"></td>
-        </tr>
+        <td>Mail</td>
+        <td th:text="${user.email}"></td>
         <tr>
             <td>Mot de passe</td>
             <td>********</td>

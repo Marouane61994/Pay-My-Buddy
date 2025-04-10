@@ -47,14 +47,14 @@
 <nav class="navbar d-flex justify-content-between">
   <span class="fw-bold">Pay My Buddy</span>
   <div>
-    <a class="/transactions/send d-inline d-inline" href="#">Transférer</a>
-    <a class="/users/profile d-inline" href="#">Profil</a>
-    <a class="/users/addRelation active" href="#">Ajouter relation</a>
-    <a class="/users/login d-inline text-danger" href="#">Se déconnecter</a>
+    <a class="d-inline" href="/transactions/send">Transférer</a>
+    <a class="d-inline" href="/users/profile">Profil</a>
+    <a class="active" href="/connections">Ajouter relation</a>
+    <a class="d-inline text-danger" href="/users/login">Se déconnecter</a>
   </div>
 </nav>
 
-<form th:action="@{/users/addRelation}" method="post">
+<form th:action="@{/connections//add-relation}" method="post">
   <label> Chercher une relation </label>
   <label>
     <input type="email" name="relationEmail" placeholder="Saisir une adresse mail" required>

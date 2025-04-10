@@ -25,7 +25,7 @@ public class TransactionController {
     // Affiche la page de transfert avec l'historique des transactions
     @GetMapping("/send")
     public String showTransactions(Model model, HttpSession session) {
-        User loggedUser = (User) session.getAttribute("loggedUser");
+        User loggedUser = userService.Authentification();
         if (loggedUser == null) {
             return "transfer";
         }
@@ -33,10 +33,10 @@ public class TransactionController {
         // Récupère les transactions de l'utilisateur connecté
         List<Transaction> transactions = transactionService.getUserTransactions(loggedUser);
         // Récupère la liste des amis pour l'affichage du formulaire
-        List<User> friends = userService.getAllUsers();
+       // List<User> friends = userService.getAllUsers();
 
         model.addAttribute("transactions", transactions);
-        model.addAttribute("friends", friends);
+        model.addAttribute("relations",loggedUser);
         return "transfer";
     }
 
@@ -60,5 +60,9 @@ public class TransactionController {
 
         return "redirect:/transactions";
     }
+
+
+
+
 }
 

@@ -31,5 +31,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    //Methode qui remplace l'authentification
+public User Authentification(){
+    User loggedUser  = getAllUsers().get(0);
+    return loggedUser;
+}
+
 }
 
