@@ -98,7 +98,7 @@ public class UserController {
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
-
+        loggedUser.setUsername(updatedUser.getUsername());
         loggedUser.setEmail(updatedUser.getEmail());
         loggedUser.setPassword(updatedUser.getPassword()); // Ajouter encodage en production
         userService.saveUser(loggedUser);

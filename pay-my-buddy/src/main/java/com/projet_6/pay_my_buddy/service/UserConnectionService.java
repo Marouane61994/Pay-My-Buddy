@@ -16,10 +16,9 @@ public class UserConnectionService {
     private UserConnectionRepository userConnectionRepository;
 
     public void addConnection(User user, User friend) {
-        // Vérifier si la relation existe déjà pour éviter les doublons
         boolean alreadyConnected = userConnectionRepository.findByUserId(user.getId())
                 .stream()
-                .anyMatch(conn -> conn.getFriend().getId()==friend.getId());
+                .anyMatch(conn -> conn.getFriend().getId() == friend.getId());
 
         if (alreadyConnected) {
             throw new IllegalStateException("Cet utilisateur est déjà votre ami.");
@@ -33,6 +32,17 @@ public class UserConnectionService {
 
     public List<UserConnection> getConnections(User user) {
         return userConnectionRepository.findByUserId(user.getId());
+    }
+
+    public boolean existsConnection(User user, User friend) {
+        return userConnectionRepository.existsByUserAndFriend(user, friend);
+    }
+
+    public List<User> getFriendsForUser(User user) {
+        return userConnectionRepository.findByUserId(user.getId())
+                .stream()
+                .map(UserConnection::getFriend)
+                .toList();
     }
 }
 

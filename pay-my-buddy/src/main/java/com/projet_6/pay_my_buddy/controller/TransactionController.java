@@ -3,6 +3,7 @@ package com.projet_6.pay_my_buddy.controller;
 import com.projet_6.pay_my_buddy.model.Transaction;
 import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.service.TransactionService;
+import com.projet_6.pay_my_buddy.service.UserConnectionService;
 import com.projet_6.pay_my_buddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class TransactionController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserConnectionService userConnectionService;
+
     @GetMapping("/send")
     public String showTransactions(Model model, HttpSession session) {
         User loggedUser = userService.getCurrentUser();
@@ -30,11 +34,12 @@ public class TransactionController {
         }
 
         List<Transaction> transactions = transactionService.getUserTransactions(loggedUser);
-        // Récupère la liste des amis pour l'affichage du formulaire
-       // List<User> friends = userService.getAllUsers();
+
+        List<User> relations = userConnectionService.getFriendsForUser(loggedUser);
 
         model.addAttribute("transactions", transactions);
-        model.addAttribute("relations",loggedUser);
+        model.addAttribute("relations", relations);
+
         return "transfer";
     }
 
@@ -52,14 +57,11 @@ public class TransactionController {
         boolean success = transactionService.sendMoney(loggedUser.getEmail(), receiverEmail, amount, description);
         if (!success) {
             model.addAttribute("error", "Transaction échouée. Vérifiez les informations.");
-            return showTransactions(model, session); // Recharge la page avec un message d'erreur
+            return showTransactions(model, session);
         }
 
         return "redirect:/transactions/send";
     }
-
-
-
 
 }
 
