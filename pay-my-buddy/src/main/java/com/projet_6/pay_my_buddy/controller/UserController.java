@@ -41,13 +41,11 @@ public class UserController {
         return "redirect:/users/login";
     }
 
-    // Affiche le formulaire de connexion
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
     }
 
-    // Gère la connexion utilisateur
     @PostMapping("/login")
     public String loginUser(@RequestParam String email,
                             @RequestParam String password,
@@ -70,36 +68,33 @@ public class UserController {
         return "login";
     }
 
-    // Affiche la page de profil
     @GetMapping("/profile")
     public String showProfile(HttpSession session, Model model) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
 
         model.addAttribute("user", loggedUser);
-        return "profile";
+        return "editprofile";
     }
 
-    // Formulaire d'édition de profil
     @GetMapping("/profile/edit")
     public String editProfileForm(HttpSession session, Model model) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
 
         model.addAttribute("user", loggedUser);
-        return "editProfile";
+        return "editprofile";
     }
 
-    // Mise à jour du profil
     @PostMapping("/profile/edit")
     public String updateProfile(@ModelAttribute User updatedUser,
                                 HttpSession session,
                                 Model model) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
@@ -111,10 +106,9 @@ public class UserController {
 
         model.addAttribute("user", loggedUser);
         model.addAttribute("success", "Profil mis à jour !");
-        return "profile";
+        return "editprofile";
     }
 
-    // Déconnexion
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();

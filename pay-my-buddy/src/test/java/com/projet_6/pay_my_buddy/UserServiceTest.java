@@ -26,7 +26,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService();
-        userService.userRepository = userRepository; // Injection manuelle
+        userService.userRepository = userRepository;
     }
 
     @AfterEach

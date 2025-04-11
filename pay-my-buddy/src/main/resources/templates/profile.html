@@ -40,19 +40,24 @@
             border-radius: 10px;
             overflow: hidden;
         }
+        .btn-warning {
+      background-color: #f6b439;
+      border: none;
+      color: white !important;
+    }
     </style>
 </head>
 
-<nav class="navbar d-flex justify-content-between">
+<nav class="navbar d-flex justify-content-between px-4 py-2 border-bottom">
     <span class="fw-bold">Pay My Buddy</span>
-    <div>
-        <a class="d-inline " href="/transactions/send">Transférer</a>
-        <a class="d-inline active" href="/users/profile">Profil</a>
-        <a class="d-inline" href="/connections">Ajouter relation</a>
-        <a class="d-inline text-danger" href="/users/login">Se déconnecter</a>
+    <div class="d-flex gap-3">
+        <a class="nav-link" href="/transactions/send">Transférer</a>
+        <a class="nav-link active" href="/users/profile">Profil</a>
+        <a class="nav-link " href="/connections">Ajouter relation</a>
+        <a class="nav-link" href="/users/login">Se déconnecter</a>
     </div>
 </nav>
-
+<div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 72px);">
 <form th:action="@{/users/profile}" method="post">
     <table>
         <tr>
@@ -66,8 +71,8 @@
             <td>********</td>
         </tr>
     </table>
-
-    <a href="/profile/edit"><button>Modifier</button></a>
+    <button type="submit" class="btn btn-warning fw-bold ms-2"  >Modifier</button>
 
 </form>
+</div>
 </html>

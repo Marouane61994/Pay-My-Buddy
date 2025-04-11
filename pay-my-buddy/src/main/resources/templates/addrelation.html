@@ -7,59 +7,86 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
     body {
-        background-color: #f8f9fa;
+      background-color: #f8f9fa;
+      margin: 0;
     }
+
     .navbar {
-        background: white;
-        padding: 15px;
-        border-bottom: 1px solid #ddd;
+      background: white;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
     }
+
     .nav-link {
-        font-weight: bold;
-        color: black;
+      font-weight: bold;
+      color: black;
     }
+
     .nav-link.active {
-        color: #007bff;
+      color: #007bff;
     }
-    .main-container {
-        max-width: 800px;
-        margin: auto;
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+
+    .btn-warning {
+      background-color: #f6b439;
+      border: none;
+      color: white !important;
     }
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-    }
+
     .btn-primary:hover {
-        background-color: #0056b3;
+      background-color: #0056b3;
     }
-    .table {
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
+
+    .center-form-container {
+      min-height: calc(100vh - 80px); /* pour prendre toute la hauteur sauf la navbar */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-box {
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="email"] {
+      padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 300px;
     }
   </style>
 </head>
+
 <body>
-<nav class="navbar d-flex justify-content-between">
+
+<nav class="navbar d-flex justify-content-between px-4 py-2 border-bottom">
   <span class="fw-bold">Pay My Buddy</span>
-  <div>
-    <a class="d-inline" href="/transactions/send">Transférer</a>
-    <a class="d-inline" href="/users/profile">Profil</a>
-    <a class="active" href="/connections">Ajouter relation</a>
-    <a class="d-inline text-danger" href="/users/login">Se déconnecter</a>
+  <div class="d-flex gap-3">
+    <a class="nav-link" href="/transactions/send">Transférer</a>
+    <a class="nav-link" href="/users/profile">Profil</a>
+    <a class="nav-link active" href="/connections">Ajouter relation</a>
+    <a class="nav-link" href="/users/login">Se déconnecter</a>
   </div>
 </nav>
 
-<form th:action="@{/connections//add-relation}" method="post">
-  <label> Chercher une relation </label>
-  <label>
-    <input type="email" name="relationEmail" placeholder="Saisir une adresse mail" required>
-  </label>
-  <button type="submit">Ajouter</button>
-</form>
+<div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 72px);">
+  <form th:action="@{/connections/add-relation}" method="post" class="form-box">
+    <div class="mb-3">
+      <label class="form-label fs-5 fw-semibold">Chercher une relation</label>
+    </div>
+    <div class="mb-3 d-flex justify-content-center align-items-center">
+      <label>
+        <input type="email" name="relationEmail" placeholder="Saisir une adresse mail" required>
+      </label>
+      <button type="submit" class="btn btn-warning fw-bold ms-2">Ajouter</button>
+    </div>
+  </form>
+</div>
+
+
 </body>
 </html>

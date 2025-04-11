@@ -18,20 +18,20 @@ public class UserConnectionController {
     // Affiche la page de connexion d'amis
     @GetMapping
     public String showConnections(HttpSession session, Model model) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
 
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
 
         model.addAttribute("friends", loggedUser.getEmail());
-        return "addrelation"; // une vue Thymeleaf "connections.html"
+        return "addrelation";
     }
 
     // Ajouter une relation (ami)
     @PostMapping("/add-relation")
     public String addRelation(@RequestParam String friendEmail, HttpSession session, Model model) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
 
         if (loggedUser == null) {
             return "redirect:/users/login";

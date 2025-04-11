@@ -43,13 +43,13 @@
     </style>
 </head>
 <body>
-<nav class="navbar d-flex justify-content-between">
+<nav class="navbar d-flex justify-content-between px-4 py-2 border-bottom">
     <span class="fw-bold">Pay My Buddy</span>
-    <div>
-        <a class="d-inline active" href="/transactions/send">Transférer</a>
-        <a class="d-inline" href="/users/profile">Profil</a>
-        <a class="d-inline" href="/connections">Ajouter relation</a>
-        <a class="d-inline text-danger" href="/users/login">Se déconnecter</a>
+    <div class="d-flex gap-3">
+        <a class="nav-link active" href="/transactions/send">Transférer</a>
+        <a class="nav-link" href="/users/profile">Profil</a>
+        <a class="nav-link" href="/connections">Ajouter relation</a>
+        <a class="nav-link" href="/users/login">Se déconnecter</a>
     </div>
 </nav>
 
@@ -62,15 +62,18 @@
             </select>
         </label>
         <label>
-            <input type="text" class="form-control" placeholder="Description">
+
+            <input name="description" type="text" class="form-control" placeholder="Description">
         </label>
         <label>
-            <input type="number" class="form-control" placeholder="0€">
+            <input name="amount" type="number" class="form-control" placeholder="0€">
         </label>
         <button type="submit" class="btn btn-primary">Payer</button>
     </form>
-
+    <nav class="navbar d-flex justify-content-between">
+        <span class="fw-bold">Mes Transactions</span>
     <table class="table table-striped">
+
         <thead>
         <tr>
             <th>Relations</th>
@@ -86,6 +89,8 @@
         </tr>
         </tbody>
     </table>
+    </nav>
 </div>
+
 </body>
 </html>

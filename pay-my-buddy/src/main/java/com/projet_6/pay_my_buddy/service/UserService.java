@@ -32,10 +32,10 @@ public class UserService {
     }
 
     //Methode qui remplace l'authentification
-public User Authentification(){
-    User loggedUser  = getAllUsers().get(0);
-    return loggedUser;
-}
+    public User getCurrentUser() {
+        User loggedUser = getAllUsers().get(0);
+        return loggedUser;
+    }
 
 }
 

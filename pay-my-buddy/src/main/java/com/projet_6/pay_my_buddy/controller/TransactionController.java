@@ -22,15 +22,13 @@ public class TransactionController {
     @Autowired
     private UserService userService;
 
-    // Affiche la page de transfert avec l'historique des transactions
     @GetMapping("/send")
     public String showTransactions(Model model, HttpSession session) {
-        User loggedUser = userService.Authentification();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             return "transfer";
         }
 
-        // Récupère les transactions de l'utilisateur connecté
         List<Transaction> transactions = transactionService.getUserTransactions(loggedUser);
         // Récupère la liste des amis pour l'affichage du formulaire
        // List<User> friends = userService.getAllUsers();
@@ -40,14 +38,13 @@ public class TransactionController {
         return "transfer";
     }
 
-    // Gère l'envoi d'argent
     @PostMapping("/send")
     public String sendMoney(@RequestParam String receiverEmail,
                             @RequestParam double amount,
                             @RequestParam String description,
                             HttpSession session,
                             Model model) {
-        User loggedUser = (User) session.getAttribute("loggedUser");
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             return "redirect:/user/login";
         }
@@ -58,7 +55,7 @@ public class TransactionController {
             return showTransactions(model, session); // Recharge la page avec un message d'erreur
         }
 
-        return "redirect:/transactions";
+        return "redirect:/transactions/send";
     }
 
 
