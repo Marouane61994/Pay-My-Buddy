@@ -7,7 +7,7 @@ import com.projet_6.pay_my_buddy.repository.TransactionRepository;
 import com.projet_6.pay_my_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,19 +31,14 @@ public class TransactionService {
             User sender = senderOpt.get();
             User receiver = receiverOpt.get();
 
-            // Simuler un solde pour le moment (ajouter une gestion du solde plus tard)
             if (sender.getId() == 0) {
-
-                return false; // Impossible d'envoyer à soi-même
+                return false;
             }
-
             Transaction transaction = new Transaction();
             transaction.setSender(sender);
             transaction.setReceiver(receiver);
             transaction.setAmount(amount);
             transaction.setDescription(description);
-            transaction.setTimestamp(LocalDateTime.now());
-
             transactionRepository.save(transaction);
             return true;
         }

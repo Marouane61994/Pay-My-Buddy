@@ -4,8 +4,6 @@ package com.projet_6.pay_my_buddy.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 @Entity
 @Table(name = "transactions")
@@ -28,7 +26,5 @@ public class Transaction {
 
     @Column(nullable = false)
     private String description;
-
-    private LocalDateTime timestamp;
 
 }

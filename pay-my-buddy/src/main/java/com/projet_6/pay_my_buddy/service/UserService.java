@@ -33,8 +33,7 @@ public class UserService {
 
     //Methode qui remplace l'authentification
     public User getCurrentUser() {
-        User loggedUser = getAllUsers().get(0);
-        return loggedUser;
+        return getAllUsers().get(0);
     }
 
 }

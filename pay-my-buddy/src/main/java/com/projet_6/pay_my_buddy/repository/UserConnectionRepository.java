@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface UserConnectionRepository extends JpaRepository<UserConnection, Integer> {
     List<UserConnection> findByUserId(int userId);
-    boolean existsByUserAndFriend(User user, User friend);
 
+    boolean existsByUserAndFriend(User user, User friend);
 }
