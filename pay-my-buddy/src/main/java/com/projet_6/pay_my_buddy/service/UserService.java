@@ -4,6 +4,7 @@ import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.repository.UserRepository;
 
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,12 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
     @Autowired
     public UserRepository userRepository;
+
+    @Autowired
+    private HttpSession session;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -33,8 +38,8 @@ public class UserService {
 
     //Methode qui remplace l'authentification
     public User getCurrentUser() {
-        return getAllUsers().get(0);
+       // return getAllUsers().get(0);
+        return (User) session.getAttribute("loggedUser");
     }
-
 }
 
