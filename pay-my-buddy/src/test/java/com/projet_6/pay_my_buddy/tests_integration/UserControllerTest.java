@@ -3,6 +3,7 @@ package com.projet_6.pay_my_buddy.tests_integration;
 import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.repository.UserRepository;
 import com.projet_6.pay_my_buddy.service.UserService;
+import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Data
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {

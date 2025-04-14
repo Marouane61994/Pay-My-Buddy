@@ -6,6 +6,7 @@ import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.service.TransactionService;
 import com.projet_6.pay_my_buddy.service.UserConnectionService;
 import com.projet_6.pay_my_buddy.service.UserService;
+import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Data
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class TransactionControllerTest {
