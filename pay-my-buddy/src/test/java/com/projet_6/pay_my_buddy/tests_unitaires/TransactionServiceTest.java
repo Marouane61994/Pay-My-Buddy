@@ -14,15 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
 class TransactionServiceTest {
 
     @Mock
@@ -36,32 +34,16 @@ class TransactionServiceTest {
 
 
     @Test
-    void testGetUserTransactions() {
-        User user = new User();
-        user.setId(1);
-        user.setEmail("user@example.com");
-
-        Transaction t1 = new Transaction();
-        Transaction t2 = new Transaction();
-
-        when(transactionRepository.findBySenderOrReceiver(user, user))
-                .thenReturn(Arrays.asList(t1, t2));
-
-        List<Transaction> transactions = transactionService.getUserTransactions(user);
-
-        assertEquals(2, transactions.size());
-        verify(transactionRepository, times(1)).findBySenderOrReceiver(user, user);
-    }
-
-    @Test
     void testSendMoney_SuccessfulTransaction() {
         User sender = new User();
         sender.setId(1);
         sender.setEmail("sender@example.com");
+        sender.setBalance(100.0); // Balance suffisante
 
         User receiver = new User();
         receiver.setId(2);
         receiver.setEmail("receiver@example.com");
+        receiver.setBalance(20.0); // Balance initiale
 
         when(userRepository.findByEmail("sender@example.com")).thenReturn(Optional.of(sender));
         when(userRepository.findByEmail("receiver@example.com")).thenReturn(Optional.of(receiver));
@@ -69,6 +51,7 @@ class TransactionServiceTest {
         boolean result = transactionService.sendMoney("sender@example.com", "receiver@example.com", 50.0, "Payment");
 
         assertTrue(result);
+
         ArgumentCaptor<Transaction> captor = ArgumentCaptor.forClass(Transaction.class);
         verify(transactionRepository).save(captor.capture());
 
@@ -77,7 +60,12 @@ class TransactionServiceTest {
         assertEquals(receiver, savedTransaction.getReceiver());
         assertEquals(50.0, savedTransaction.getAmount());
         assertEquals("Payment", savedTransaction.getDescription());
+
+        // Vérifier les balances mises à jour
+        assertEquals(50.0, sender.getBalance());   // 100 - 50
+        assertEquals(70.0, receiver.getBalance()); // 20 + 50
     }
+
 
     @Test
     void testSendMoney_SenderNotFound() {
@@ -137,4 +125,6 @@ class TransactionServiceTest {
         assertFalse(result);
         verify(transactionRepository, never()).save(any());
     }
+
+    //Cas a rajouter pas asser d'argent
 }

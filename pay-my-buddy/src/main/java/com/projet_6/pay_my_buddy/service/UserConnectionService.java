@@ -5,13 +5,19 @@ import com.projet_6.pay_my_buddy.model.UserConnection;
 import com.projet_6.pay_my_buddy.repository.UserConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserConnectionService {
     @Autowired
     private UserConnectionRepository userConnectionRepository;
+
+    @Autowired
+    private UserService userService;
+
 
     public void addConnection(User user, User friend) {
         boolean alreadyConnected = userConnectionRepository.findByUserId(user.getId())
@@ -41,6 +47,27 @@ public class UserConnectionService {
                 .stream()
                 .map(UserConnection::getFriend)
                 .toList();
+    }
+
+    public void addRelation(User loggedUser, String friendEmail) {
+        Optional<User> friendOptional = userService.findByEmail(friendEmail);
+
+        if (friendOptional.isEmpty()) {
+            throw new RuntimeException("Aucun utilisateur avec cet email.");
+
+        }
+
+        User friend = friendOptional.get();
+
+        boolean alreadyConnected = existsConnection(loggedUser, friend);
+        if (alreadyConnected) {
+            throw new RuntimeException("Vous êtes déjà connecté à cet utilisateur.");
+
+        }
+
+        addConnection(loggedUser, friend);
+
+
     }
 }
 

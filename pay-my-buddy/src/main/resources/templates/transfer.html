@@ -53,7 +53,19 @@
     </div>
 </nav>
 
+
 <div class="container main-container mt-4">
+
+    <div class="mb-3">
+        <h5>Solde actuel : <span th:text="${user.balance} + ' €'">0 €</span></h5>
+    </div>
+
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
     <form th:action="@{/transactions/send}" method="post">
         <label>
             <select name="receiverEmail">

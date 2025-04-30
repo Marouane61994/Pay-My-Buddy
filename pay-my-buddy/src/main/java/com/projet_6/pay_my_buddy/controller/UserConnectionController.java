@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/connections")
@@ -43,26 +42,14 @@ public class UserConnectionController {
         if (loggedUser == null) {
             return "redirect:/users/login";
         }
-
-        Optional<User> friendOptional = userService.findByEmail(friendEmail);
-
-        if (friendOptional.isEmpty()) {
-            model.addAttribute("error", "Aucun utilisateur avec cet email.");
+        try {
+            userConnectionService.addRelation(loggedUser, friendEmail);
+            return "transfer";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
             return "addrelation";
         }
 
-        User friend = friendOptional.get();
-
-        boolean alreadyConnected = userConnectionService.existsConnection(loggedUser, friend);
-
-        if (alreadyConnected) {
-            model.addAttribute("info", "Vous êtes déjà connecté à cet utilisateur.");
-            return "addrelation";
-        }
-
-        userConnectionService.addConnection(loggedUser, friend);
-        model.addAttribute("success", "Ami ajouté avec succès !");
-        return "addrelation";
     }
 
 

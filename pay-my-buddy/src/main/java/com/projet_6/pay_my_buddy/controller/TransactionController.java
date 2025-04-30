@@ -35,7 +35,7 @@ public class TransactionController {
         List<Transaction> transactions = transactionService.getUserTransactions(loggedUser);
 
         List<User> relations = userConnectionService.getFriendsForUser(loggedUser);
-
+        model.addAttribute("user", loggedUser);
         model.addAttribute("transactions", transactions);
         model.addAttribute("relations", relations);
 

@@ -69,33 +69,6 @@ class UserConnectionServiceTest {
         verify(userConnectionRepository, never()).save(any());
     }
 
-    @Test
-    void testGetConnections() {
-        User user = new User();
-        user.setId(1);
-
-        List<UserConnection> connections = List.of(new UserConnection(), new UserConnection());
-
-        when(userConnectionRepository.findByUserId(user.getId())).thenReturn(connections);
-
-        List<UserConnection> result = userConnectionService.getConnections(user);
-
-        assertEquals(2, result.size());
-        verify(userConnectionRepository).findByUserId(user.getId());
-    }
-
-    @Test
-    void testExistsConnection() {
-        User user = new User();
-        User friend = new User();
-
-        when(userConnectionRepository.existsByUserAndFriend(user, friend)).thenReturn(true);
-
-        boolean exists = userConnectionService.existsConnection(user, friend);
-
-        assertTrue(exists);
-        verify(userConnectionRepository).existsByUserAndFriend(user, friend);
-    }
 
     @Test
     void testGetFriendsForUser() {

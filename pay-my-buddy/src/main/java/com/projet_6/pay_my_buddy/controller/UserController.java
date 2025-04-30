@@ -4,6 +4,8 @@ import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+   private PasswordEncoder passwordEncoder;
 
     // Affiche le formulaire d'inscription
     @GetMapping("/register")
@@ -36,7 +41,7 @@ public class UserController {
             model.addAttribute("error", "Cet email est déjà utilisé !");
             return "register";
         }
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         return "redirect:/users/login";
     }
@@ -55,7 +60,7 @@ public class UserController {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (user.getPassword().equals(password)) {
+            if (passwordEncoder.matches(password, user.getPassword())){
                 session.setAttribute("loggedUser", user);
                 return "redirect:/users/profile";
             } else {
@@ -100,7 +105,9 @@ public class UserController {
         }
         loggedUser.setUsername(updatedUser.getUsername());
         loggedUser.setEmail(updatedUser.getEmail());
-        loggedUser.setPassword(updatedUser.getPassword()); // Ajouter encodage en production
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            loggedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
         userService.saveUser(loggedUser);
         session.setAttribute("loggedUser", loggedUser);
 

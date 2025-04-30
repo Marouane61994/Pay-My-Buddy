@@ -63,7 +63,7 @@ class TransactionControllerTest {
                 .andExpect(model().attributeExists("transactions"))
                 .andExpect(model().attributeExists("relations"));
     }
-
+//tester une sendtransaction avec la base donnée
     @Test
     void testSendMoneySuccess() throws Exception {
         when(transactionService.sendMoney(Mockito.anyString(), Mockito.anyString(), Mockito.anyDouble(), Mockito.anyString()))

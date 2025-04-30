@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +32,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -82,7 +86,7 @@ class UserControllerTest {
     void testLogin_Success() throws Exception {
         User user = new User();
         user.setEmail("test@mail.com");
-        user.setPassword("1234");
+        user.setPassword(passwordEncoder.encode("1234")); //
 
         when(userService.findByEmail("test@mail.com")).thenReturn(Optional.of(user));
 
@@ -127,4 +131,5 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users/login"));
     }
+    //rajouter cas nominale pour addprofile
 }
