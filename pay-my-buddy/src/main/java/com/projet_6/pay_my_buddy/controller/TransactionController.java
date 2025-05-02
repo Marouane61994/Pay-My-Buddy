@@ -26,10 +26,10 @@ public class TransactionController {
     private UserConnectionService userConnectionService;
 
     @GetMapping("/send")
-    public String showTransactions(Model model, HttpSession session) {
+    public String showTransactions(Model model) {
         User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
-            return "transfer";
+            return "redirect:users/login";
         }
 
         List<Transaction> transactions = transactionService.getUserTransactions(loggedUser);
@@ -56,7 +56,7 @@ public class TransactionController {
         boolean success = transactionService.sendMoney(loggedUser.getEmail(), receiverEmail, amount, description);
         if (!success) {
             model.addAttribute("error", "Transaction échouée. Vérifiez les informations.");
-            return showTransactions(model, session);
+            return showTransactions(model);
         }
 
         return "redirect:/transactions/send";

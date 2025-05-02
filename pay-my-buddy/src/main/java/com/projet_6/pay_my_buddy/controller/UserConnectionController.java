@@ -1,7 +1,6 @@
 package com.projet_6.pay_my_buddy.controller;
 
 import com.projet_6.pay_my_buddy.model.User;
-
 import com.projet_6.pay_my_buddy.service.UserConnectionService;
 import com.projet_6.pay_my_buddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -21,9 +20,8 @@ public class UserConnectionController {
     @Autowired
     private UserConnectionService userConnectionService;
 
-    // Affiche la page de connexion d'amis
     @GetMapping
-    public String showConnections(HttpSession session, Model model) {
+    public String showConnections(Model model) {
         User loggedUser = userService.getCurrentUser();
 
         if (loggedUser == null) {
@@ -34,7 +32,6 @@ public class UserConnectionController {
         return "addrelation";
     }
 
-    // Ajouter une relation (ami)
     @PostMapping("/add-relation")
     public String addRelation(@RequestParam String friendEmail, Model model) {
         User loggedUser = userService.getCurrentUser();
@@ -44,13 +41,12 @@ public class UserConnectionController {
         }
         try {
             userConnectionService.addRelation(loggedUser, friendEmail);
-            return "transfer";
+            return "redirect:/transactions/send";
+
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "addrelation";
         }
 
     }
-
-
 }

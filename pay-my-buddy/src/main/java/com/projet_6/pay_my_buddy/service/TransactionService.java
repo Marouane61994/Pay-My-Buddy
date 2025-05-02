@@ -31,21 +31,21 @@ public class TransactionService {
             User sender = senderOpt.get();
             User receiver = receiverOpt.get();
 
-            // Vérification du solde
+
             if (sender.getBalance() == null || sender.getBalance() < amount) {
                 return false;
             }
 
-            // Débit du sender
+
             sender.setBalance(sender.getBalance() - amount);
 
-            // Crédit du receiver
+
             if (receiver.getBalance() == null) {
                 receiver.setBalance(0.0);
             }
             receiver.setBalance(receiver.getBalance() + amount);
 
-            // Sauvegarde des users MAJ
+
             userRepository.save(sender);
             userRepository.save(receiver);
             Transaction transaction = new Transaction();
