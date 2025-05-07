@@ -46,7 +46,6 @@ public class TransactionController {
     public String sendMoney(@RequestParam String receiverEmail,
                             @RequestParam double amount,
                             @RequestParam String description,
-                            HttpSession session,
                             Model model) {
         User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {

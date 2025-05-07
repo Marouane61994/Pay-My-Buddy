@@ -5,6 +5,7 @@ import com.projet_6.pay_my_buddy.model.Transaction;
 import com.projet_6.pay_my_buddy.model.User;
 import com.projet_6.pay_my_buddy.repository.TransactionRepository;
 import com.projet_6.pay_my_buddy.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class TransactionService {
         return transactionRepository.findBySenderOrReceiver(user, user);
     }
 
+    @Transactional
     public boolean sendMoney(String senderEmail, String receiverEmail, double amount, String description) {
         Optional<User> senderOpt = userRepository.findByEmail(senderEmail);
         Optional<User> receiverOpt = userRepository.findByEmail(receiverEmail);

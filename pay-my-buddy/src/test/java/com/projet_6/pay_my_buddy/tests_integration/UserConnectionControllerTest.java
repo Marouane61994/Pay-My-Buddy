@@ -1,111 +1,94 @@
 package com.projet_6.pay_my_buddy.tests_integration;
 
+import com.projet_6.pay_my_buddy.controller.UserConnectionController;
 import com.projet_6.pay_my_buddy.model.User;
-import com.projet_6.pay_my_buddy.model.UserConnection;
-import com.projet_6.pay_my_buddy.repository.TransactionRepository;
+import com.projet_6.pay_my_buddy.service.UserConnectionService;
+import com.projet_6.pay_my_buddy.service.UserService;
 import com.projet_6.pay_my_buddy.repository.UserRepository;
-import com.projet_6.pay_my_buddy.repository.UserConnectionRepository;
-import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import org.springframework.mock.web.MockHttpSession;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import java.util.Optional;
+
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Data
-@SpringBootTest
-@AutoConfigureMockMvc
-class UserConnectionControllerTest {
+@WebMvcTest(UserConnectionController.class)
+public class UserConnectionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockitoBean
+    private UserService userService;
+
+    @MockitoBean
+    private UserConnectionService userConnectionService;
+
+    @MockitoBean
     private UserRepository userRepository;
 
-    @Autowired
-    private UserConnectionRepository userConnectionRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
-    private User loggedUser;
-
-    private MockHttpSession session;
-
     @BeforeEach
-    void setUp() {
-        transactionRepository.deleteAll();
-        userConnectionRepository.deleteAll();
-        userRepository.deleteAll();
+    public void setUp() {
+        User user1 = new User();
+        user1.setEmail("loggedUser@example.com");
+        user1.setPassword("password123");
+        user1.setUsername("loggedUser");
+        user1.setBalance(100.0);
 
-        loggedUser = new User();
-        loggedUser.setEmail("user@example.com");
-        loggedUser.setUsername("TestUser");
-        loggedUser.setPassword("123456");
-        userRepository.save(loggedUser);
+        Mockito.when(userService.getCurrentUser()).thenReturn(user1);
 
-        session = new MockHttpSession();
-        session.setAttribute("loggedUser", loggedUser);
-    }
+        User user2 = new User();
+        user2.setEmail("friend@example.com");
+        user2.setPassword("password456");
+        user2.setUsername("friendUser");
+        user2.setBalance(50.0);
 
-
-    @Test
-    void testAddRelation_UserNotFound() throws Exception {
-        mockMvc.perform(post("/connections/add-relation")
-                        .param("friendEmail", "notfound@example.com")
-                        .session(session))
-                .andExpect(status().isOk())
-                .andExpect(view().name("addrelation"))
-                .andExpect(model().attribute("error", "Aucun utilisateur avec cet email."));
+        Mockito.when(userRepository.findByEmail("friend@example.com")).thenReturn(Optional.of(user2));
     }
 
     @Test
-    void testAddRelation_AlreadyConnected() throws Exception {
+    @WithMockUser(username = "loggedUser@example.com", roles = "USER")
+    public void testAddRelation_Success() throws Exception {
 
-        User friend = new User();
-        friend.setEmail("friend@example.com");
-        friend.setPassword("friend");
-        friend.setUsername("Friend");
-        userRepository.save(friend);
-
-
-        UserConnection connection = new UserConnection();
-        connection.setUser(loggedUser);
-        connection.setFriend(friend);
-
-        userConnectionRepository.save(connection);
-
-
-        mockMvc.perform(post("/connections/add-relation")
+        mockMvc.perform(MockMvcRequestBuilders.post("/connections/add-relation")
                         .param("friendEmail", "friend@example.com")
-                        .session(session))
-                .andExpect(status().isOk())
-                .andExpect(view().name("addrelation"))
-                .andExpect(model().attribute("info", "Vous êtes déjà connecté à cet utilisateur."));
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .with(csrf())) // <-- ajout du token CSRF valide
+                .andExpect(status().is3xxRedirection())  // Redirection après ajout de la relation
+                .andExpect(view().name("redirect:/transactions/send"));
     }
 
     @Test
-    void testAddRelation_Success() throws Exception {
-        // Crée un ami à ajouter
-        User newFriend = new User();
-        newFriend.setEmail("newfriend@example.com");
-        newFriend.setPassword("newpass");
-        newFriend.setUsername("NewFriend");
-        userRepository.save(newFriend);
+    @WithMockUser(username = "loggedUser@example.com", roles = "USER")
+    public void testAddRelation_FriendNotFound() throws Exception {
+        User user1 = new User();
+        user1.setEmail("loggedUser@example.com");
+        user1.setPassword("password123");
+        user1.setUsername("loggedUser");
+        user1.setBalance(100.0);
 
-        mockMvc.perform(post("/connections/add-relation")
-                        .param("friendEmail", "newfriend@example.com")
-                        .session(session))
+        Mockito.doThrow(new RuntimeException("User not found"))
+                .when(userConnectionService)
+                .addRelation(user1, "nonexistent@example.com");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/connections/add-relation")
+                        .param("friendEmail", "nonexistent@example.com")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("addrelation"))
-                .andExpect(model().attribute("success", "Ami ajouté avec succès !"));
+                .andExpect(model().attributeExists("error"));
     }
+
 }

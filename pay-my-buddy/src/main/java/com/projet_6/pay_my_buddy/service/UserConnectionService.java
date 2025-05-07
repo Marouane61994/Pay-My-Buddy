@@ -18,7 +18,6 @@ public class UserConnectionService {
     @Autowired
     private UserService userService;
 
-
     public void addConnection(User user, User friend) {
         boolean alreadyConnected = userConnectionRepository.findByUserId(user.getId())
                 .stream()

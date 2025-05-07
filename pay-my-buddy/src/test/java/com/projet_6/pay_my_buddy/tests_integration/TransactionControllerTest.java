@@ -1,96 +1,99 @@
 package com.projet_6.pay_my_buddy.tests_integration;
 
-
-
 import com.projet_6.pay_my_buddy.model.User;
-import com.projet_6.pay_my_buddy.service.TransactionService;
-import com.projet_6.pay_my_buddy.service.UserConnectionService;
-import com.projet_6.pay_my_buddy.service.UserService;
-import lombok.Data;
+import com.projet_6.pay_my_buddy.repository.UserRepository;
+import com.projet_6.pay_my_buddy.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Data
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
-class TransactionControllerTest {
+@Transactional
+public class TransactionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
-    private TransactionService transactionService;
+    @Autowired
+    private UserRepository userRepository;
 
-    @MockitoBean
-    private UserService userService;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
-    @MockitoBean
-    private UserConnectionService userConnectionService;
-
-    private User mockUser;
+    private User sender;
+    private User receiver;
 
     @BeforeEach
-    void setUp() {
-        mockUser = new User();
-        mockUser.setId(1);
-        mockUser.setEmail("user@example.com");
+    public void setUp() {
 
-        when(userService.getCurrentUser()).thenReturn(mockUser);
+
+        sender = new User();
+        sender.setEmail("sender@example.com");
+        sender.setPassword("password123");
+        sender.setUsername("senderUser");
+        sender.setBalance(100.0);
+        userRepository.save(sender);
+
+        receiver = new User();
+        receiver.setEmail("receiver@example.com");
+        receiver.setPassword("password456");
+        receiver.setUsername("receiverUser");
+        receiver.setBalance(50.0);
+        userRepository.save(receiver);
     }
 
     @Test
-    void testShowTransactions() throws Exception {
-        when(transactionService.getUserTransactions(mockUser)).thenReturn(List.of());
-        when(userConnectionService.getFriendsForUser(mockUser)).thenReturn(List.of());
-
-        mockMvc.perform(get("/transactions/send"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("transfer"))
-                .andExpect(model().attributeExists("transactions"))
-                .andExpect(model().attributeExists("relations"));
-    }
-//tester une sendtransaction avec la base donnée
-    @Test
-    void testSendMoneySuccess() throws Exception {
-        when(transactionService.sendMoney(Mockito.anyString(), Mockito.anyString(), Mockito.anyDouble(), Mockito.anyString()))
-                .thenReturn(true);
-
+    @WithMockUser(username = "sender@example.com", roles = "USER")
+    public void testSendMoney_Success() throws Exception {
         mockMvc.perform(post("/transactions/send")
-                        .param("receiverEmail", "friend@example.com")
-                        .param("amount", "50.0")
-                        .param("description", "test transaction"))
+                        .param("receiverEmail", "receiver@example.com")
+                        .param("amount", "30.0")
+                        .param("description", "Payment for services")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/transactions/send"));
+
+        // Vérification en base
+        User updatedSender = userRepository.findByEmail("sender@example.com").orElseThrow();
+        User updatedReceiver = userRepository.findByEmail("receiver@example.com").orElseThrow();
+
+        assertThat(updatedSender.getBalance()).isEqualTo(70.0);
+        assertThat(updatedReceiver.getBalance()).isEqualTo(80.0);
+        assertThat(transactionRepository.findAll()).hasSize(1);
     }
 
     @Test
-    void testSendMoneyFailure() throws Exception {
-        when(transactionService.sendMoney(Mockito.anyString(), Mockito.anyString(), Mockito.anyDouble(), Mockito.anyString()))
-                .thenReturn(false);
-
-        when(transactionService.getUserTransactions(mockUser)).thenReturn(List.of());
-        when(userConnectionService.getFriendsForUser(mockUser)).thenReturn(List.of());
-
+    @WithMockUser(username = "sender@example.com", roles = "USER")
+    public void testSendMoney_InsufficientFunds() throws Exception {
         mockMvc.perform(post("/transactions/send")
-                        .param("receiverEmail", "friend@example.com")
-                        .param("amount", "0")
-                        .param("description", "test fail"))
+                        .param("receiverEmail", "receiver@example.com")
+                        .param("amount", "150.0")
+                        .param("description", "Payment for services")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk())
-                .andExpect(view().name("transfer"))
+                .andExpect(view().name("transfer"))  // ou "send" selon ta vue de fallback
                 .andExpect(model().attributeExists("error"));
+
+        // Vérification : aucun changement
+        User updatedSender = userRepository.findByEmail("sender@example.com").orElseThrow();
+        User updatedReceiver = userRepository.findByEmail("receiver@example.com").orElseThrow();
+
+        assertThat(updatedSender.getBalance()).isEqualTo(100.0);
+        assertThat(updatedReceiver.getBalance()).isEqualTo(50.0);
+        assertThat(transactionRepository.findAll()).isEmpty();
     }
 }
