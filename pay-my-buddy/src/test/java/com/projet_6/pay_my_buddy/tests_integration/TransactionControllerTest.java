@@ -66,7 +66,6 @@ public class TransactionControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/transactions/send"));
 
-        // Vérification en base
         User updatedSender = userRepository.findByEmail("sender@example.com").orElseThrow();
         User updatedReceiver = userRepository.findByEmail("receiver@example.com").orElseThrow();
 
@@ -88,7 +87,6 @@ public class TransactionControllerTest {
                 .andExpect(view().name("transfer"))  // ou "send" selon ta vue de fallback
                 .andExpect(model().attributeExists("error"));
 
-        // Vérification : aucun changement
         User updatedSender = userRepository.findByEmail("sender@example.com").orElseThrow();
         User updatedReceiver = userRepository.findByEmail("receiver@example.com").orElseThrow();
 
