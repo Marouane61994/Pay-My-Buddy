@@ -126,5 +126,28 @@ class TransactionServiceTest {
         verify(transactionRepository, never()).save(any());
     }
 
-    //Cas a rajouter pas asser d'argent
+    @Test
+    void testSendMoney_NotEnoughBalance() {
+        // Arrange
+        User sender = new User();
+        sender.setId(1);
+        sender.setEmail("sender@example.com");
+        sender.setBalance(5.0); // Pas assez pour envoyer 10
+
+        User receiver = new User();
+        receiver.setId(2);
+        receiver.setEmail("receiver@example.com");
+        receiver.setBalance(0.0);
+
+        when(userRepository.findByEmail("sender@example.com")).thenReturn(Optional.of(sender));
+        when(userRepository.findByEmail("receiver@example.com")).thenReturn(Optional.of(receiver));
+
+        // Act
+        boolean result = transactionService.sendMoney("sender@example.com", "receiver@example.com", 10.0, "Paiement");
+
+        // Assert
+        assertFalse(result); // L'opération doit échouer
+        verify(transactionRepository, never()).save(any()); // Aucune transaction sauvegardée
+    }
+
 }

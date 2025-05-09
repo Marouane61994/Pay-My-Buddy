@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS `p6`.`Transactions` (
   `receiver_id` INT NOT NULL,
   `description` TEXT NULL,
   `amount` DOUBLE NOT NULL,
-  `commission` double DEFAULT NULL,
   `timestamp` datetime(6) DEFAULT NULL,
   INDEX `idx_sender_id` (`sender_id` ASC) VISIBLE,
   INDEX `idx_receiver_id` (`receiver_id` ASC) VISIBLE,
