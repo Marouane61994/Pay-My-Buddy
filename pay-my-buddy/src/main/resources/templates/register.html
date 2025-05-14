@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Inscription - Pay My Buddy</title>
@@ -26,9 +26,9 @@
         }
 
         .btn-warning {
-          background-color: #f6b439;
+          background-color: #e0a800; /* meilleur contraste */
           border: none;
-          color: white  !important;
+          color: white !important;
         }
 
         .btn-primary {
@@ -39,42 +39,46 @@
         .btn-primary:hover {
           background-color: #0056b3;
         }
+
+        input:focus, button:focus {
+          outline: 2px solid #0056b3;
+          outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container d-flex justify-content-center align-items-center register-wrapper">
     <div class="register-card">
-        <!-- Logo ou nom -->
         <div class="text-center mb-4">
-            <button class="btn btn-warning px-4 py-2 fw-bold" disabled>Pay My Buddy</button>
+            <button class="btn btn-warning px-4 py-2 fw-bold" disabled aria-disabled="true">Pay My Buddy</button>
         </div>
 
-        <!-- Formulaire -->
-        <form th:action="@{/users/register}" method="post" th:object="${user}">
-            <div class="text-center mb-3">
-                <label>
-                    <input type="text" class="form-control" placeholder="Username" th:field="*{username}" required/>
-                </label>
+        <form th:action="@{/users/register}" method="post" th:object="${user}" aria-label="Formulaire d'inscription">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input type="text" id="username" class="form-control" placeholder="Nom d'utilisateur"
+                       th:field="*{username}" required aria-required="true">
             </div>
-            <div class="text-center mb-3">
-                <label>
-                    <input type="email" class="form-control" placeholder="Mail" th:field="*{email}" required/>
-                </label>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Adresse mail</label>
+                <input type="email" id="email" class="form-control" placeholder="Adresse mail"
+                       th:field="*{email}" required aria-required="true">
             </div>
-            <div class="text-center mb-3">
-                <label>
-                    <input type="password" class="form-control" placeholder="Mot de passe" th:field="*{password}"
-                           required/>
-                </label>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" id="password" class="form-control" placeholder="Mot de passe"
+                       th:field="*{password}" required aria-required="true">
             </div>
 
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">S'inscrire</button>
             </div>
 
-            <!-- Message d'erreur -->
-            <div th:if="${error}" class="text-danger mt-3 text-center" th:text="${error}"></div>
+            <div th:if="${error}" class="text-danger mt-3 text-center" th:text="${error}"
+                 role="alert" aria-live="assertive"></div>
         </form>
     </div>
 </div>
