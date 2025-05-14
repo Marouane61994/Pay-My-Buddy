@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de transfert</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .nav-link {
+            font-weight: bold;
+            color: black;
+        }
+        .nav-link.active {
+            color: #007bff;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar d-flex justify-content-between px-4 py-2 border-bottom">
+    <span class="fw-bold">Pay My Buddy</span>
+    <div class="d-flex gap-3">
+        <a class="nav-link active" href="/transactions/send">Transférer</a>
+        <a class="nav-link" href="/users/profile">Profil</a>
+        <a class="nav-link" href="/connections">Ajouter relation</a>
+        <a class="nav-link" href="/users/login">Se déconnecter</a>
+    </div>
+</nav>
+
+
+<div class="container main-container mt-4">
+
+    <div class="mb-3">
+        <h5>Solde actuel : <span th:text="${user.balance} + ' €'">0 €</span></h5>
+    </div>
+
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <form th:action="@{/transactions/send}" method="post">
+        <label>
+            <select name="receiverEmail">
+                <option value="" disabled selected>Sélectionner une relation</option>
+                <option th:each="relation : ${relations}" th:value="${relation.email}" th:text="${relation.username}"></option>
+            </select>
+        </label>
+        <label>
+
+            <input name="description" type="text" class="form-control" placeholder="Description">
+        </label>
+        <label>
+            <input name="amount" type="number" class="form-control" placeholder="0€">
+        </label>
+        <button type="submit" class="btn btn-primary">Payer</button>
+    </form>
+    <nav class="navbar d-flex justify-content-between">
+        <span class="fw-bold">Mes Transactions</span>
+    <table class="table table-striped">
+
+        <thead>
+        <tr>
+            <th>Relations</th>
+            <th>Description</th>
+            <th>Montant</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.receiver.email}"></td>
+            <td th:text="${transaction.description}"></td>
+            <td th:text="${transaction.amount} + '€'"></td>
+        </tr>
+        </tbody>
+    </table>
+    </nav>
+</div>
+
+</body>
+</html>

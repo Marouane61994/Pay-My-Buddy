@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Envoyer de l'Argent</title>
+  <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+<h2>Envoyer de l'Argent</h2>
+
+<form th:action="@{/transactions/send}" method="post">
+  <input type="email" name="receiverEmail" placeholder="Email du destinataire" required>
+  <input type="number" name="amount" min="1" step="0.01" required>
+  <input type="text" name="description" placeholder="Description" required>
+  <button type="submit">Envoyer</button>
+</form>
+
+
+<a href="/transactions">Retour</a>
+</body>
+</html>
