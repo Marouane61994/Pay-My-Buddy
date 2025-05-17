@@ -64,5 +64,13 @@ CREATE TABLE IF NOT EXISTS `p6`.`Users_Connections` (
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Données de test - Utilisateurs
+-- -----------------------------------------------------
+INSERT IGNORE INTO `Users` (`username`, `email`, `password`, `balance`) VALUES
+('Alice', 'alice@example.com', '$2a$10$G8U3VdjPdUjNvw0N/M2eS.0fUjo6ENIxsrntZL4wnGzeZqvbuubCG', 100.00),-- Email : alice@example.com / Mot de passe : password123--
+('Bob', 'bob@example.com', '$2a$10$G8U3VdjPdUjNvw0N/M2eS.0fUjo6ENIxsrntZL4wnGzeZqvbuubCG', 50.12),-- Email : bob@example.com / Mot de passe : password123--
+('Charlie', 'charlie@example.com', '$2a$10$G8U3VdjPdUjNvw0N/M2eS.0fUjo6ENIxsrntZL4wnGzeZqvbuubCG', 24.70),-- Email : charlie@example.com /  Mot de passe : password123--
+('David', 'david@example.com', '$2a$10$G8U3VdjPdUjNvw0N/M2eS.0fUjo6ENIxsrntZL4wnGzeZqvbuubCG', 0.00);-- Email : david@example.com / Mot de passe : password123--
 
 

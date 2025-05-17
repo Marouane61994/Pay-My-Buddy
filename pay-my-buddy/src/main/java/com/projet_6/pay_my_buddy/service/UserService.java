@@ -57,5 +57,7 @@ public class UserService implements UserDetailsService {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
     }
+
+
 }
 
