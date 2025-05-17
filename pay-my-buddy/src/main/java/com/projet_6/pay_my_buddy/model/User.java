@@ -18,6 +18,12 @@ public class User {
     @Column(nullable = false)
     private String password;
     private Double balance;
+
+    @Transient
+    public String getFormattedBalance() {
+        return String.format("%.2f", this.balance);
+    }
+
 }
 
 

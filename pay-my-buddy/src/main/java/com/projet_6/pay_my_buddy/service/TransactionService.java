@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,12 @@ public class TransactionService {
         Optional<User> receiverOpt = userRepository.findByEmail(receiverEmail);
 
         if (senderOpt.isPresent() && receiverOpt.isPresent() && amount > 0) {
+
+            // Arrondi du montant à 2 décimales
+            double roundedAmount = BigDecimal.valueOf(amount)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+
             User sender = senderOpt.get();
             User receiver = receiverOpt.get();
 
