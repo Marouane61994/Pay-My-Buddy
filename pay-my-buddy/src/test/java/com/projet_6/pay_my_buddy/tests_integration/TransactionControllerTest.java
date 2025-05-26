@@ -37,7 +37,7 @@ public class TransactionControllerTest {
 
     @BeforeEach
     public void setUp() {
-
+        transactionRepository.deleteAll();
 
         sender = new User();
         sender.setEmail("sender@example.com");
