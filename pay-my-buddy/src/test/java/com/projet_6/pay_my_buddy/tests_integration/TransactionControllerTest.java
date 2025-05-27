@@ -84,7 +84,7 @@ public class TransactionControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk())
-                .andExpect(view().name("transfer"))  // ou "send" selon ta vue de fallback
+                .andExpect(view().name("transfer"))
                 .andExpect(model().attributeExists("error"));
 
         User updatedSender = userRepository.findByEmail("sender@example.com").orElseThrow();
